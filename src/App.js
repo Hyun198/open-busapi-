@@ -7,19 +7,16 @@ function App() {
   const serviceKey = process.env.REACT_APP_API_KEY;
 
   const [keyword, setKeyword] = useState("");
-  const [busCode, setBusCode] = useState(null);
-
+  const [routeId, setRouteId] = useState(null);
   const keywordInput = useRef(null);
 
   const { busInfo, fetchBusCodeInfo } = useBusInfo();
-  const { stationdIds, fetchBusRoute } = useBusRouteList()
+  const { stations, fetchBusRoute } = useBusRouteList()
 
   const handleSearch = () => {
     setKeyword(keywordInput.current.value);
 
   }
-
-
 
   //버스 노선정보 조회
   const fetchBusCode = async (keyword) => {
@@ -57,17 +54,20 @@ function App() {
       if (keyword) {
         const routeId = await fetchBusCode(keyword);
         if (routeId) {
-          setBusCode(routeId);
-          fetchBusCodeInfo(busCode);
-
+          setRouteId(routeId);
         }
       }
-
     };
-
     getBusCode();
+  }, [keyword]);
 
-  }, [keyword, fetchBusCodeInfo, fetchBusRoute]);
+  useEffect(() => {
+    if (routeId) {
+      fetchBusCodeInfo(routeId);
+      fetchBusRoute(routeId);
+    }
+  }, [routeId, fetchBusCodeInfo, fetchBusRoute]);
+
 
   return (
     <div>
@@ -90,6 +90,20 @@ function App() {
       ) : (
         <p>Loading bus information...</p>
       )}
+      {stations.length > 0 && (
+        <div>
+          <h2>Stations</h2>
+          <ul>
+            {stations.map(station => (
+              <li key={station.stationId}>
+                <strong>ID:</strong> {station.stationId} <strong>Name:</strong> {station.stationName}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+
     </div>
 
   );
