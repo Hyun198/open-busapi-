@@ -1,14 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
-
+import useBusInfo from './hooks/useBusInfo';
+import useBusRouteList from './hooks/useBusRouteList';
 function App() {
+  const serviceKey = process.env.REACT_APP_API_KEY;
 
+  const [keyword, setKeyword] = useState("");
   const [busCode, setBusCode] = useState(null);
-  const [busInfo, setBusInfo] = useState(null);
-  const [error, setError] = useState(null);
 
-  let serviceKey = process.env.REACT_APP_API_KEY;
+  const keywordInput = useRef(null);
+
+  const { busInfo, fetchBusCodeInfo } = useBusInfo();
+  const { stationdIds, fetchBusRoute } = useBusRouteList()
+
+  const handleSearch = () => {
+    setKeyword(keywordInput.current.value);
+
+  }
+
+
+
   //버스 노선정보 조회
   const fetchBusCode = async (keyword) => {
     let url = `http://apis.data.go.kr/6410000/busrouteservice/getBusRouteList?serviceKey=${serviceKey}&keyword=${keyword}`;
@@ -34,102 +46,36 @@ function App() {
       }
     } catch (error) {
       console.error('Error fetching bus code:', error);
-      setError(error.message);
+
     }
   };
 
-
-  //노선 정보 항목조회 (첫차, 막차,  배차시간)
-  const fetchBusCodeInfo = async (routeId) => {
-    try {
-      const url = `http://apis.data.go.kr/6410000/busrouteservice/getBusRouteInfoItem?serviceKey=${serviceKey}&routeId=${routeId}`;
-      const response = await axios.get(url, {
-        headers: {
-          'Content-Type': 'text/xml; charset=utf-8'
-        },
-        responseType: 'text'
-      });
-
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(response.data, 'text/xml');
-
-      const busRouteInfoItems = xmlDoc.getElementsByTagName('busRouteInfoItem');
-      if (busRouteInfoItems.length === 0) {
-        throw new Error('No bus route info item found');
-      }
-
-      const busRouteInfo = busRouteInfoItems[0];
-
-      const busInfo = {
-        regionName: busRouteInfo.getElementsByTagName('regionName')[0].textContent,
-        upFirstTime: busRouteInfo.getElementsByTagName('upFirstTime')[0].textContent,
-        upLastTime: busRouteInfo.getElementsByTagName('upLastTime')[0].textContent,
-        downFirstTime: busRouteInfo.getElementsByTagName('downFirstTime')[0].textContent,
-        downLastTime: busRouteInfo.getElementsByTagName('downLastTime')[0].textContent,
-        peekAlloc: busRouteInfo.getElementsByTagName('peekAlloc')[0].textContent,
-        nPeekAlloc: busRouteInfo.getElementsByTagName('nPeekAlloc')[0].textContent,
-        companyTel: busRouteInfo.getElementsByTagName('companyTel')[0].textContent,
-      };
-
-      setBusInfo(busInfo);
-    } catch (error) {
-      console.error('Error fetching bus route info:', error);
-      setError(error.message);
-    }
-  };
-
-  const fetchBusLocation = async () => {
-    try {
-      const url = `http://apis.data.go.kr/6410000/buslocationservice/getBusLocationList?serviceKey=${serviceKey}&routeId=232000009`
-      const response = await axios.get(url, {
-        headers: {
-          'Content-Type': 'text/xml; charset=utf-8'
-        },
-        responseType: 'text'
-      });
-
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(response.data, 'text/xml');
-      const busLocationList = xmlDoc.getElementsByTagName('busLocationList');
-      if (busLocationList.length === 0) {
-        throw new Error('No bus location info item found');
-      }
-
-      const busLocation = busLocationList[0];
-      const busLoc = {
-        endBus: busLocation.getElementsByTagName('endBus')[0].textContent,
-        lowPlate: busLocation.getElementsByTagName('lowPlate')[0].textContent,
-        plateNo: busLocation.getElementsByTagName('plateNo')[0].textContent,
-      }
-      console.log('busLoc', busLoc);
-
-    } catch (error) {
-      console.error(error);
-    }
-
-  }
 
 
   useEffect(() => {
-    const keyword = '52'; // 사용자 입력값으로 대체 가능
     const getBusCode = async () => {
-      const routeId = await fetchBusCode(keyword);
+      if (keyword) {
+        const routeId = await fetchBusCode(keyword);
+        if (routeId) {
+          setBusCode(routeId);
+          fetchBusCodeInfo(busCode);
 
-      if (routeId) {
-        setBusCode(routeId);
-        fetchBusCodeInfo(routeId);
+        }
       }
+
     };
 
     getBusCode();
-    fetchBusLocation();
-  }, []);
 
+  }, [keyword, fetchBusCodeInfo, fetchBusRoute]);
 
   return (
     <div>
       Homepage
-      routeId={busCode}
+
+      <input type="text" placeholder='검색할 버스 번호' ref={keywordInput} />
+      <button onClick={handleSearch}>Search</button>
+      {keyword && <p>입력된 키워드: {keyword}</p>}
       {busInfo ? (
         <div>
           <p><strong>Region Name:</strong> {busInfo.regionName}</p>
