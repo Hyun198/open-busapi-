@@ -66,7 +66,7 @@ function App() {
       fetchBusCodeInfo(routeId);
       fetchBusRoute(routeId);
     }
-  }, [routeId, fetchBusCodeInfo, fetchBusRoute]);
+  }, [routeId]);
 
 
   return (
