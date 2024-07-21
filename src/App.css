@@ -1,0 +1,36 @@
+.station-list {
+    background-color: #222;
+    color: white;
+}
+
+.station-list ul {
+    display: flex;
+    flex-direction: column;
+
+    list-style: none;
+    padding: 5px;
+}
+
+.station-list ul li {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+/*bus arrive list*/
+
+.bus-arrive {
+    background-color: antiquewhite;
+}
+
+.bus-arrive ul {
+    list-style: none;
+
+
+}
+
+.bus-arrive ul li {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}

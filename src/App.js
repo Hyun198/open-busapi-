@@ -3,15 +3,21 @@ import axios from 'axios';
 import './App.css';
 import useBusInfo from './hooks/useBusInfo';
 import useBusRouteList from './hooks/useBusRouteList';
+import useStationArrive from './hooks/useStationArrive';
 function App() {
   const serviceKey = process.env.REACT_APP_API_KEY;
 
   const [keyword, setKeyword] = useState("");
   const [routeId, setRouteId] = useState(null);
+
+
+  const [selectedStation, setSelectedStation] = useState(null);
+
   const keywordInput = useRef(null);
 
   const { busInfo, fetchBusCodeInfo } = useBusInfo();
   const { stations, fetchBusRoute } = useBusRouteList()
+  const { arrivals, fetchArrive } = useStationArrive();
 
   const handleSearch = () => {
     setKeyword(keywordInput.current.value);
@@ -47,6 +53,10 @@ function App() {
     }
   };
 
+  const handleStationClick = async (stationId, stationName) => {
+    setSelectedStation({ stationId, stationName });
+    await fetchArrive(stationId);
+  };
 
 
   useEffect(() => {
@@ -63,8 +73,8 @@ function App() {
 
   useEffect(() => {
     if (routeId) {
-      fetchBusCodeInfo(routeId);
-      fetchBusRoute(routeId);
+      fetchBusCodeInfo(routeId); //버스 노선 정보
+      fetchBusRoute(routeId); // keyword 노선의 경유 정류장들
     }
   }, [routeId]);
 
@@ -78,6 +88,7 @@ function App() {
       {keyword && <p>입력된 키워드: {keyword}</p>}
       {busInfo ? (
         <div>
+          <h2>버스 노선 정보</h2>
           <p><strong>Region Name:</strong> {busInfo.regionName}</p>
           <p><strong>Up First Time:</strong> {busInfo.upFirstTime}</p>
           <p><strong>Up Last Time:</strong> {busInfo.upLastTime}</p>
@@ -91,18 +102,29 @@ function App() {
         <p>Loading bus information...</p>
       )}
       {stations.length > 0 && (
-        <div>
+        <div className="station-list">
           <h2>Stations</h2>
           <ul>
-            {stations.map(station => (
-              <li key={station.stationId}>
+            {stations.map((station) => (
+              <li key={station.stationId} onClick={() => handleStationClick(station.stationId, station.stationName)}>
                 <strong>ID:</strong> {station.stationId} <strong>Name:</strong> {station.stationName}
               </li>
             ))}
           </ul>
         </div>
       )}
-
+      {arrivals.length > 0 && (
+        <div className="bus-arrive">
+          <h2>Bus Arrivals for {selectedStation.stationName}</h2>
+          <ul>
+            {arrivals.map((arrival, index) => (
+              <li key={index}>
+                <strong>버스 번호:</strong> {arrival.routeNumber} <strong>Location No:</strong> {arrival.locationNo1} <strong>Predict Time:</strong> {arrival.predictTime1} <strong>Remain Seat Count:</strong> {arrival.remainSeatCnt1}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
     </div>
 
