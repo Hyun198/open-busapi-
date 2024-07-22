@@ -1,8 +1,3 @@
-.layout {
-    display: flex;
-
-}
-
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -29,40 +24,37 @@
 
 /*bus-route-info*/
 .bus-route-info {
-    background: beige;
-    flex: 0.5;
+    display: flex;
+    flex-direction: column;
+}
+
+.bus-route-info div {
+    display: flex;
+    border: 1px solid lightgreen;
+    width: 100%;
+    text-align: center;
+    gap: 10px;
 }
 
 
 /*station-list*/
 .station-list {
-    flex: 1;
-    background-color: #222;
     color: white;
-    height: 100%;
+    background-color: #222;
+    width: 100%;
+    height: 550px;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
-.station-list ul {
-    display: flex;
-    flex-direction: column;
-    list-style: none;
-    padding: 5px;
-
-}
-
-.station-list ul li {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-    height: 150px;
-    padding: 5px;
-    border: 0.5px solid #fff;
+.station-card {
+    margin-bottom: 2rem;
+    text-align: center;
 }
 
 /*bus arrive list*/
 
 .bus-arrive {
-    flex: 0.5;
     background-color: antiquewhite;
 }
 
