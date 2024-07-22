@@ -80,53 +80,60 @@ function App() {
 
 
   return (
-    <div>
-      Homepage
+    <>
+      <nav className="navbar">
+        <h2>경기도 버스 노선 조회</h2>
+        <div className="search-form">
+          <input type="text" className="search-box" placeholder='검색할 버스 번호' ref={keywordInput} />
+          <button onClick={handleSearch}>Search</button>
+        </div>
 
-      <input type="text" placeholder='검색할 버스 번호' ref={keywordInput} />
-      <button onClick={handleSearch}>Search</button>
-      {keyword && <p>입력된 키워드: {keyword}</p>}
-      {busInfo ? (
-        <div>
-          <h2>버스 노선 정보</h2>
-          <p><strong>Region Name:</strong> {busInfo.regionName}</p>
-          <p><strong>Up First Time:</strong> {busInfo.upFirstTime}</p>
-          <p><strong>Up Last Time:</strong> {busInfo.upLastTime}</p>
-          <p><strong>Down First Time:</strong> {busInfo.downFirstTime}</p>
-          <p><strong>Down Last Time:</strong> {busInfo.downLastTime}</p>
-          <p><strong>Peek Alloc:</strong> {busInfo.peekAlloc}</p>
-          <p><strong>Non-Peek Alloc:</strong> {busInfo.nPeekAlloc}</p>
-          <p><strong>Company Tel:</strong> {busInfo.companyTel}</p>
-        </div>
-      ) : (
-        <p>Loading bus information...</p>
-      )}
-      {stations.length > 0 && (
-        <div className="station-list">
-          <h2>Stations</h2>
-          <ul>
-            {stations.map((station) => (
-              <li key={station.stationId} onClick={() => handleStationClick(station.stationId, station.stationName)}>
-                <strong>ID:</strong> {station.stationId} <strong>Name:</strong> {station.stationName}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      </nav>
+      <div className="layout">
+        {busInfo ? (
+          <div className="bus-route-info">
+            <h2>{keyword} 버스 노선 정보</h2>
+            <p>Region Name: {busInfo.regionName}</p>
+            <p>Up First Time: {busInfo.upFirstTime}</p>
+            <p>Up Last Time: {busInfo.upLastTime}</p>
+            <p>Down First Time: {busInfo.downFirstTime}</p>
+            <p>Down Last Time: {busInfo.downLastTime}</p>
+            <p>Peek Alloc: {busInfo.peekAlloc}</p>
+            <p>Non-Peek Alloc: {busInfo.nPeekAlloc}</p>
+            <p>Company Tel: {busInfo.companyTel}</p>
+          </div>
+        ) : (
+          <p>Loading bus information...</p>
+        )}
+        {stations.length > 0 && (
+          <div className="station-list">
+            <h2>Stations</h2>
+            <ul>
+              {stations.map((station) => (
+                <li key={station.stationId} onClick={() => handleStationClick(station.stationId, station.stationName)}>
+                  <strong>ID:</strong> {station.stationId} <strong>Name:</strong> {station.stationName}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+
+      </div>
       {arrivals.length > 0 && (
         <div className="bus-arrive">
           <h2>Bus Arrivals for {selectedStation.stationName}</h2>
           <ul>
             {arrivals.map((arrival, index) => (
               <li key={index}>
-                <strong>버스 번호:</strong> {arrival.routeNumber} <strong>Location No:</strong> {arrival.locationNo1} <strong>Predict Time:</strong> {arrival.predictTime1} <strong>Remain Seat Count:</strong> {arrival.remainSeatCnt1}
+                <strong>버스 번호:</strong> {arrival.routeNumber} <strong>Location No:</strong> {arrival.locationNo1} 정거장 전 <strong>Predict Time:</strong> {arrival.predictTime1}분 후 <strong>Remain Seat Count:</strong> {arrival.remainSeatCnt1} 좌석 남음
               </li>
             ))}
           </ul>
         </div>
       )}
+    </>
 
-    </div>
 
   );
 }

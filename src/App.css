@@ -1,31 +1,74 @@
-.station-list {
+.layout {
+    display: flex;
+
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
     background-color: #222;
     color: white;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+}
+
+.search-box {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+}
+
+.navbar button {
+    border: none;
+    padding: 5px;
+    margin-left: 10px;
+}
+
+/*bus-route-info*/
+.bus-route-info {
+    background: beige;
+    flex: 0.5;
+}
+
+
+/*station-list*/
+.station-list {
+    flex: 1;
+    background-color: #222;
+    color: white;
+    height: 100%;
 }
 
 .station-list ul {
     display: flex;
     flex-direction: column;
-
     list-style: none;
     padding: 5px;
+
 }
 
 .station-list ul li {
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    width: 300px;
+    height: 150px;
+    padding: 5px;
+    border: 0.5px solid #fff;
 }
 
 /*bus arrive list*/
 
 .bus-arrive {
+    flex: 0.5;
     background-color: antiquewhite;
 }
 
 .bus-arrive ul {
     list-style: none;
-
+    display: flex;
 
 }
 
@@ -33,4 +76,5 @@
     display: flex;
     flex-direction: column;
     padding: 10px;
+    border: 1px solid #222;
 }
