@@ -164,9 +164,9 @@ function App() {
                       <Card className="station-card">
                         <Card.Header as="h5">{station.stationName}</Card.Header>
                         <Card.Body>
-                          <Card.Title>
+                          {/* <Card.Title>
                             Station ID: {station.stationId}
-                          </Card.Title>
+                          </Card.Title> */}
                           <Button
                             variant="primary"
                             onClick={() =>
@@ -189,31 +189,34 @@ function App() {
         </Row>
         <Row>
           <Col lg={12}>
-            {arrivals.length > 0 ? (
-              <div className="bus-arrive">
-                <h2>{selectedStation?.stationName} 정류장 도착 버스 도착 정보</h2>
-                <ul>
-                  {arrivals.length > 0 ? (
-                    arrivals.map((arrival, index) => (
-                      <li key={index}>
-                        <strong>버스 번호:</strong> {arrival.routeNumber}{" "}
-                        <strong>Location No:</strong> {arrival.locationNo1} 정거장 전
-                        <strong>도착 예정시간:</strong> {arrival.predictTime1}분 후
-                        <strong>남은 좌석 수:</strong>{" "}
-                        {arrival.remainSeatCnt1 === -1 ? "좌석 없음" : arrival.remainSeatCnt1} 좌석 남음
-                      </li>
-                    ))
-                  ) : (
-                    <p>Loading arrivals...</p>
-                  )}
-                </ul>
-                {!arrivals.some(arrival => arrival.routeNumber === keyword) && keyword && (
-                  <p>{keyword} 버스 도착 정보가 없습니다.</p>
-                )}
-              </div>
-            ) : (
-              <p>Loading arrivals...</p>
-            )}
+            <div className="bus-arrive">
+              <h2>{selectedStation?.stationName} 정류장 도착 버스 도착 정보</h2>
+              {arrivals.length > 0 ? (
+
+                <div className="bus-arrivals-carousel">
+                  {arrivals.map((arrival, index) => (
+                    <Card className="arrival-card" key={index}>
+                      <Card.Body>
+                        <Card.Title>버스 번호: {arrival.routeNumber}</Card.Title>
+                        <Card.Text>
+                          <strong>Location No:</strong> {arrival.locationNo1} 정거장 전
+                        </Card.Text>
+                        <Card.Text>
+                          <strong>도착 예정시간:</strong> {arrival.predictTime1}분 후
+                        </Card.Text>
+                        <Card.Text>
+                          <strong>남은 좌석 수:</strong>{" "}
+                          {arrival.remainSeatCnt1 === "-1" ? "좌석 없음" : arrival.remainSeatCnt1}
+                        </Card.Text>
+                      </Card.Body>
+                    </Card>
+                  ))}
+
+                </div>
+              ) : (
+                <p>Loading arrivals...</p>
+              )}
+            </div>
           </Col>
         </Row>
       </Container>

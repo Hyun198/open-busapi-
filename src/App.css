@@ -55,18 +55,44 @@
 /*bus arrive list*/
 
 .bus-arrive {
-    background-color: antiquewhite;
+    margin-top: 20px;
 }
 
-.bus-arrive ul {
-    list-style: none;
+.bus-arrivals-carousel {
     display: flex;
-
+    overflow-x: auto;
+    padding: 10px 0;
+    gap: 10px;
 }
 
-.bus-arrive ul li {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    border: 1px solid #222;
+.arrival-card {
+    min-width: 250px;
+    /* 카드의 최소 너비 설정 */
+    flex: 0 0 auto;
+    /* 카드가 가로로 나열되도록 설정 */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+}
+
+.arrival-card:hover {
+    transform: translateY(-5px);
+    /* 카드가 위로 이동하도록 설정 */
+    box-shadow: 0 8px 16px #71ace8;
+    /* 그림자 강조 */
+}
+
+.arrival-card .card-body {
+    transition: background-color 0.3s ease-in-out;
+}
+
+.arrival-card .card-body:hover {
+    background-color: #f8f9fa;
+    /* 배경색 변경 */
+}
+
+.no-arrivals {
+    text-align: center;
+    padding: 20px;
 }
