@@ -164,9 +164,6 @@ function App() {
                       <Card className="station-card">
                         <Card.Header as="h5">{station.stationName}</Card.Header>
                         <Card.Body>
-                          {/* <Card.Title>
-                            Station ID: {station.stationId}
-                          </Card.Title> */}
                           <Button
                             variant="primary"
                             onClick={() =>
@@ -194,7 +191,7 @@ function App() {
               {arrivals.length > 0 ? (
 
                 <div className="bus-arrivals-carousel">
-                  {arrivals.map((arrival, index) => (
+                  {arrivals?.map((arrival, index) => (
                     <Card className="arrival-card" key={index}>
                       <Card.Body>
                         <Card.Title>버스 번호: {arrival.routeNumber}</Card.Title>

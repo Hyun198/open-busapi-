@@ -6,6 +6,7 @@ const serviceKey = process.env.REACT_APP_API_KEY;
 const useStationArrive = () => {
 
     const [arrivals, setArrivals] = useState([]);
+    const [hasArrivals, setHasArrivals] = useState(true);
 
     const fetchArrive = async (stationId) => {
         try {
@@ -23,7 +24,9 @@ const useStationArrive = () => {
 
             const busArriveLists = xmlDoc.getElementsByTagName('busArrivalList')
             if (busArriveLists.length === 0) {
-                throw new Error('No bus arrive data');
+                setHasArrivals(false);
+                setArrivals([]);
+                return;
             }
 
             const arrivalData = [];
@@ -41,10 +44,13 @@ const useStationArrive = () => {
                     remainSeatCnt1: busArrival.getElementsByTagName('remainSeatCnt1')[0].textContent,
                 });
             }
-
+            setHasArrivals(true);
             setArrivals(arrivalData);
         } catch (error) {
-            console.error(error);
+
+            console.error("버스 도착정보 에러", error);
+            setHasArrivals(false);
+            setArrivals([]);
         }
     }
 
@@ -61,7 +67,7 @@ const useStationArrive = () => {
             const parser = new DOMParser();
             const xmlDoc = parser.parseFromString(response.data, 'text/xml');
             const routeNumber = xmlDoc.getElementsByTagName('routeName')[0].textContent;
-            console.log(routeNumber);
+
             return routeNumber;
         } catch (error) {
             console.error('Error fetching route number:', error);
